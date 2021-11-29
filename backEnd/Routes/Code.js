@@ -1,6 +1,7 @@
 const router = require('express').Router();
 let Code = require('../Modals/code.modal');
-const ObjectId = require("mongodb").ObjectId
+const ObjectId = require("mongodb").ObjectId 
+const { authUSer} = require("../middleWare/authUser")
 
 router.route('/add').post((req, res) => {
   const code ={"creator":req.body.creator,"html":req.body.html,"css":req.body.css,"js":req.body.js};
@@ -12,11 +13,10 @@ console.log(req.body);
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/').get(async (req,res)=>{
- //   return res.json("hello world")
-//   console.log(req.body);
+router.get('/',[authUSer],async (req,res)=>{
+  console.log(req.params);
   try{
-    const x= await Code.find({"creator":req.body.creator})
+    const x= await Code.find({"creator":"riti1k"})
     res.status(200).json(x)
   }
   catch(e){
@@ -24,10 +24,10 @@ router.route('/').get(async (req,res)=>{
   }
 })
 
-router.route('/getCode').get(async (req,res)=>{
+router.get('/getCode',[authUSer],async (req,res)=>{
     console.log(req.body);
     try{
-      const x= await Code.findOne({"_id":ObjectId(req.body.id)})
+      const x= await Code.findOne({"_id":ObjectId("619a4eabd6520382b16c837c")})
       res.status(200).json(x)
     }
     catch(e){

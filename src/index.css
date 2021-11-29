@@ -57,3 +57,7 @@ body {
   border-bottom-left-radius: .5rem;
   overflow: hidden;
 }
+
+.nav{
+  background-color: black !important;
+}
