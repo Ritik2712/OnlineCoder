@@ -27,9 +27,17 @@ export default function Navbar() {
           <Typography className={classes.title} variant="h6" noWrap>
             Code-Clone
           </Typography>
-          <Button color="inherit">SignUp</Button>
-          <Button color="inherit">Login</Button>
-          <Button color="inherit">Save </Button>
+          {localStorage.getItem("IsLogin") === "0" ? (
+            <>
+              <Button color="inherit">SignUp</Button>
+              <Button color="inherit">Login</Button>
+            </>
+          ) : (
+            <>
+              <Button color="inherit">Save </Button>
+              <Button color="inherit">My Codes </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </div>

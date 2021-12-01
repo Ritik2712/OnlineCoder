@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Editor from "./Editor";
 import useLocalStorage from "../hooks/useLocalStorage";
-import Navbar from "./Navbar";
 
 function Body() {
   const [html, setHtml] = useLocalStorage("html", "");
@@ -18,14 +17,12 @@ function Body() {
           <script>${js}</script>
         </html>
       `);
-    }, 250);
+    }, 1000);
 
     return () => clearTimeout(timeout);
   }, [html, css, js]);
-  console.log(html);
   return (
     <>
-      <Navbar />
       <div className="pane top-pane">
         <Editor
           language="xml"
