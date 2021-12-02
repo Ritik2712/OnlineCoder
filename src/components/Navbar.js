@@ -1,6 +1,8 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useLocation, Link } from "react-router-dom";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,8 +20,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar() {
+export default function Navbar(props) {
+  const LOC = useLocation();
   const classes = useStyles();
+  const save = () => {
+    const DATA = {
+      html: localStorage.getItem("codepen-clone-html"),
+      css: localStorage.getItem("codepen-clone-css"),
+      js: localStorage.getItem("codepen-clone-js"),
+    };
+    const HEADERS = {
+      authorization: `Toekn ` + localStorage.getItem("TOKEN"),
+    };
+    console.log(JSON.stringify(localStorage.getItem("TOKEN")));
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/code/add",
+      data: DATA,
+      headers: HEADERS,
+    });
+  };
   return (
     <div className={`${classes.root} nav`}>
       <AppBar position="static">
@@ -34,8 +54,17 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Button color="inherit">Save </Button>
-              <Button color="inherit">My Codes </Button>
+              {LOC.pathname !== "/my-codes" ? (
+                <Button color="inherit" onClick={save}>
+                  Save
+                </Button>
+              ) : null}
+              <Link to="/new" className="link">
+                <Button color="inherit">New Code</Button>
+              </Link>
+              <Link to="/my-codes" className="link">
+                <Button color="inherit">My Codes</Button>
+              </Link>
             </>
           )}
         </Toolbar>

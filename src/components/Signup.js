@@ -18,8 +18,8 @@ export default function Signup() {
     })
       .then((res) => {
         console.log(res.data.token);
-        localStorage.setItem("TOKEN", JSON.stringify(res.data.token));
-        localStorage.setItem("IsLogin", JSON.stringify(1));
+        localStorage.setItem("TOKEN", res.data.token);
+        localStorage.setItem("IsLogin", 1);
       })
       .catch((e) => {
         console.log(e);
@@ -35,6 +35,7 @@ export default function Signup() {
       <br />
       {errors.username && "Username required"}
       <br />
+      <br />
       <TextField
         label="Password"
         type="password"
@@ -42,8 +43,8 @@ export default function Signup() {
         {...register("password", { required: true, minLength: 8 })}
       />
       <br />
-      {errors.password && "Last name is required"}
-
+      {errors.password && "Password is require"}
+      <br />
       <br />
       <TextField
         label="Confirm Password"
@@ -56,8 +57,8 @@ export default function Signup() {
         })}
       />
       <br />
-      {errors.confirmPassword && "Last name is match"}
-
+      {errors.confirmPassword && "Password doesn't match"}
+      <br />
       <br />
       <Button type="submit" variant="contained" color="primary">
         Submit

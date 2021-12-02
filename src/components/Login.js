@@ -13,8 +13,8 @@ export default function Login() {
     })
       .then((res) => {
         console.log(res.data.token);
-        localStorage.setItem("TOKEN", JSON.stringify(res.data.token));
-        localStorage.setItem("IsLogin", JSON.stringify(1));
+        localStorage.setItem("TOKEN", res.data.token);
+        localStorage.setItem("IsLogin", 1);
       })
       .catch((e) => {
         console.log(e);

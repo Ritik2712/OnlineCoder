@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Editor from "./Editor";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { useParams } from "react-router-dom";
 
-function Body() {
+function Body(props) {
   const [html, setHtml] = useLocalStorage("html", "");
   const [css, setCss] = useLocalStorage("css", "");
   const [js, setJs] = useLocalStorage("js", "");
   const [srcDoc, setSrcDoc] = useState("");
-
+  console.log(useParams());
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(`

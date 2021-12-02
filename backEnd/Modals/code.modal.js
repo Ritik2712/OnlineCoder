@@ -1,25 +1,29 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const codeSchema = new Schema({
-    creator:{
-        type: String,
-        required:true,
-        trim: true,
-        minlength: 3
-    },
-    html:{
-        type:String,
-    },
-    css:{
-        type:String,
-    },
-    js:{
-        type:String,
-    }
+  creator: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 3,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  html: {
+    type: String,
+  },
+  css: {
+    type: String,
+  },
+  js: {
+    type: String,
+  },
 });
 
-const Code = mongoose.model('Code',codeSchema);
+const Code = mongoose.model("Code", codeSchema);
 
-module.exports=Code
+module.exports = Code;
