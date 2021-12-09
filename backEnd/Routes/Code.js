@@ -9,14 +9,37 @@ router.post("/add", [authUSer], (req, res) => {
     html: req.body.html,
     css: req.body.css,
     js: req.body.js,
+    name: req.body.name,
   };
-  console.log(req.body);
   const newCode = new Code(code);
   console.log(newCode);
   newCode
     .save()
     .then(() => res.json("Code added!"))
     .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.put("/update", [authUSer], async (req, res) => {
+  const code = {
+    html: req.body.html,
+    css: req.body.css,
+    js: req.body.js,
+  };
+  try {
+    const updatedCode = await Code.updateOne(
+      { name: req.body.name, creator: req.username },
+      code
+    );
+    console.log(updatedCode);
+    const x = await Code.find({
+      creator: req.user.username,
+      name: req.body.name,
+    });
+    console.log(x);
+    res.send("code Updated");
+  } catch (e) {
+    res.status(400).json("Error: " + e);
+  }
 });
 
 router.get("/", [authUSer], async (req, res) => {
@@ -30,12 +53,33 @@ router.get("/", [authUSer], async (req, res) => {
 });
 
 router.get("/getCode", [authUSer], async (req, res) => {
-  console.log(req.body);
+  console.log(req.query);
+  console.log(req.user.username);
   try {
-    const x = await Code.findOne({ _id: ObjectId("619a4eabd6520382b16c837c") });
+    const x = await Code.findOne({
+      creator: req.user.username,
+      name: req.query.name,
+    });
+    console.log(x);
+    if (x.creator !== req.user.username) {
+      res.status(403).json({ 403: "You don't have access to this code" });
+    }
     res.status(200).json(x);
   } catch (e) {
     return res.json(`Error: ${e}`);
+  }
+});
+
+router.delete("/delete", [authUSer], async (req, res) => {
+  try {
+    const x = await Code.deleteOne({
+      creator: req.user.username,
+      name: req.body.name,
+    });
+    console.log(x);
+    res.send("code deleted");
+  } catch (e) {
+    res.status(400).json("Bad request");
   }
 });
 

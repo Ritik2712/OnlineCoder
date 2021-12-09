@@ -23,6 +23,7 @@ const codeSchema = new Schema({
     type: String,
   },
 });
+codeSchema.index({ name: 1, creator: 1 }, { unique: true });
 
 const Code = mongoose.model("Code", codeSchema);
 

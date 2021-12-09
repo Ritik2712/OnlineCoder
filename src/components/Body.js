@@ -1,14 +1,42 @@
 import React, { useState, useEffect } from "react";
 import Editor from "./Editor";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 function Body(props) {
   const [html, setHtml] = useLocalStorage("html", "");
   const [css, setCss] = useLocalStorage("css", "");
   const [js, setJs] = useLocalStorage("js", "");
   const [srcDoc, setSrcDoc] = useState("");
-  console.log(useParams());
+  const { id } = useParams();
+  const [isLogin, setIslogin] = useState(true);
+
+  useEffect(() => {
+    if (id === "new") {
+      setHtml("");
+      setCss("");
+      setJs("");
+    } else {
+      if (localStorage.getItem("IsLogin") === "0") {
+        setIslogin(false);
+      }
+      const HEADERS = {
+        authorization: `Toekn ` + localStorage.getItem("TOKEN"),
+      };
+      axios({
+        method: "GET",
+        url: "http://localhost:5000/code/getCode",
+        params: { name: id },
+        headers: HEADERS,
+      }).then((res) => {
+        setHtml(res.data.html);
+        setCss(res.datcssml);
+        setJs(res.data.js);
+      });
+    }
+  }, []);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(`
@@ -22,6 +50,9 @@ function Body(props) {
 
     return () => clearTimeout(timeout);
   }, [html, css, js]);
+  if (!isLogin) {
+    return <Navigate to="/new" />;
+  }
   return (
     <>
       <div className="pane top-pane">

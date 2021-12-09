@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { Link, Navigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -21,10 +22,15 @@ const useStyles = makeStyles({
 export default function Codes() {
   const [codes, setcodes] = useState([]);
   const classes = useStyles();
+  const [islogin, setIslogin] = useState(false);
+  const HEADERS = {
+    authorization: `Toekn ` + localStorage.getItem("TOKEN"),
+  };
   useEffect(() => {
-    const HEADERS = {
-      authorization: `Toekn ` + localStorage.getItem("TOKEN"),
-    };
+    if (localStorage.getItem("IsLogin") === "0") {
+      setIslogin(true);
+    }
+
     axios({
       method: "GET",
       url: "http://localhost:5000/code",
@@ -37,10 +43,25 @@ export default function Codes() {
       .catch((e) => {
         console.log(e);
       });
-    return () => {
-      setcodes([]);
-    };
   }, []);
+  if (islogin) {
+    return <Navigate to="/new" />;
+  }
+  const Del = (name) => {
+    axios({
+      method: "DELETE",
+      url: "http://localhost:5000/code/delete",
+      data: { name },
+      headers: HEADERS,
+    })
+      .then((res) => {
+        console.log(res.data);
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -52,7 +73,7 @@ export default function Codes() {
         </TableHead>
         <TableBody>
           {codes.length === 0 ? (
-            <h1>No CProjects yet</h1>
+            <h1>No Projects yet</h1>
           ) : (
             codes.map((item, index) => (
               <TableRow key={index}>
@@ -60,10 +81,20 @@ export default function Codes() {
                   {item.name}
                 </TableCell>
                 <TableCell align="right">
-                  <Button variant="contained" color="primary" className="edit">
-                    Edit
-                  </Button>
-                  <Button variant="contained" color="secondary">
+                  <Link to={`/${item.name}`} className="link">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className="edit"
+                    >
+                      Edit
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="contained"
+                    onClick={() => Del(item.name)}
+                    color="secondary"
+                  >
                     Delete
                   </Button>
                 </TableCell>
