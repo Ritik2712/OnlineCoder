@@ -33,7 +33,7 @@ export default function Codes() {
 
     axios({
       method: "GET",
-      url: "http://localhost:5000/code",
+      url: "https://limitless-castle-44403.herokuapp.com/code",
       headers: HEADERS,
     })
       .then((res) => {
@@ -50,7 +50,7 @@ export default function Codes() {
   const Del = (name) => {
     axios({
       method: "DELETE",
-      url: "http://localhost:5000/code/delete",
+      url: "https://limitless-castle-44403.herokuapp.com/code/delete",
       data: { name },
       headers: HEADERS,
     })

@@ -27,7 +27,7 @@ function Body(props) {
       };
       axios({
         method: "GET",
-        url: "http://localhost:5000/code/getCode",
+        url: "https://limitless-castle-44403.herokuapp.com/code/getCode",
         params: { name: id },
         headers: HEADERS,
       }).then((res) => {

@@ -57,7 +57,7 @@ export default function Navbar(props) {
     };
     axios({
       method: "PUT",
-      url: "http://localhost:5000/code/update",
+      url: "https://limitless-castle-44403.herokuapp.com/code/update",
       data: DATA,
       headers: HEADERS,
     })
@@ -78,7 +78,7 @@ export default function Navbar(props) {
     console.log(DATA);
     axios({
       method: "POST",
-      url: "http://localhost:5000/code/add",
+      url: "https://limitless-castle-44403.herokuapp.com/code/add",
       data: DATA,
       headers: HEADERS,
     })

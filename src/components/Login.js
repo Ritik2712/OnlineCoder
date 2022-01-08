@@ -20,7 +20,7 @@ export default function Login() {
   const Submit = (data) => {
     axios({
       method: "POST",
-      url: "http://localhost:5000/users/signup",
+      url: "https://limitless-castle-44403.herokuapp.com/users/signup",
       data,
     })
       .then((res) => {

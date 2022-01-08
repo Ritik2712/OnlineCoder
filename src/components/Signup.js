@@ -24,7 +24,7 @@ export default function Signup() {
   const Submit = (data) => {
     axios({
       method: "POST",
-      url: "http://localhost:5000/users/add",
+      url: "https://limitless-castle-44403.herokuapp.com/users/add",
       data,
     })
       .then((res) => {
