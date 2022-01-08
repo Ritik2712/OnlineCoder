@@ -27,15 +27,14 @@ router.put("/update", [authUSer], async (req, res) => {
   };
   try {
     const updatedCode = await Code.updateOne(
-      { name: req.body.name, creator: req.username },
-      code
+      { name: req.body.name, creator: req.user.username },
+      { $set: code }
     );
     console.log(updatedCode);
     const x = await Code.find({
       creator: req.user.username,
       name: req.body.name,
     });
-    console.log(x);
     res.send("code Updated");
   } catch (e) {
     res.status(400).json("Error: " + e);
@@ -43,7 +42,6 @@ router.put("/update", [authUSer], async (req, res) => {
 });
 
 router.get("/", [authUSer], async (req, res) => {
-  console.log(req.params);
   try {
     const x = await Code.find({ creator: req.user.username });
     res.status(200).json(x);
@@ -53,17 +51,12 @@ router.get("/", [authUSer], async (req, res) => {
 });
 
 router.get("/getCode", [authUSer], async (req, res) => {
-  console.log(req.query);
-  console.log(req.user.username);
   try {
     const x = await Code.findOne({
       creator: req.user.username,
       name: req.query.name,
     });
     console.log(x);
-    if (x.creator !== req.user.username) {
-      res.status(403).json({ 403: "You don't have access to this code" });
-    }
     res.status(200).json(x);
   } catch (e) {
     return res.json(`Error: ${e}`);
