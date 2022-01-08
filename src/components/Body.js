@@ -31,7 +31,7 @@ function Body(props) {
         headers: HEADERS,
       }).then((res) => {
         setHtml(res.data.html);
-        setCss(res.datcssml);
+        setCss(res.data.css);
         setJs(res.data.js);
       });
     }
