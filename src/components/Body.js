@@ -12,6 +12,7 @@ function Body(props) {
   const { id } = useParams();
   const [isLogin, setIslogin] = useState(true);
 
+
   useEffect(() => {
     if (id === "new") {
       setHtml("");
