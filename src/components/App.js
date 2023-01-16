@@ -4,7 +4,8 @@ import Body from "./Body";
 import Login from "./Login";
 import Signup from "./Signup";
 import Navbar from "./Navbar";
-import Codes from "./Codes";
+import PubliCode from "./PubliCode";
+import PublicView from "./PublicView";
 
 export default function App() {
   return (
@@ -12,10 +13,11 @@ export default function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/:id" element={<Body />} />
+          <Route path="/:id/:type" element={<Body />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/my-codes" element={<Codes />} />
+          <Route path="/public-codes" element={<PubliCode />} />
+          <Route path="public/:name" element={<PublicView />} />
         </Routes>
       </Router>
     </div>

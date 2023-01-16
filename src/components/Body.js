@@ -3,15 +3,16 @@ import Editor from "./Editor";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { Navigate, useParams } from "react-router-dom";
 import axios from "axios";
+import Codes from "./Codes";
 
 function Body(props) {
   const [html, setHtml] = useLocalStorage("html", "");
   const [css, setCss] = useLocalStorage("css", "");
   const [js, setJs] = useLocalStorage("js", "");
   const [srcDoc, setSrcDoc] = useState("");
-  const { id } = useParams();
+  const { id, type } = useParams();
+  const [Id, setId] = useState(id);
   const [isLogin, setIslogin] = useState(true);
-
 
   useEffect(() => {
     if (id === "new") {
@@ -27,16 +28,21 @@ function Body(props) {
       };
       axios({
         method: "GET",
-        url: "https://limitless-castle-44403.herokuapp.com/code/getCode",
+        url: "http://localhost:5000/code/getCode",
         params: { name: id },
         headers: HEADERS,
-      }).then((res) => {
-        setHtml(res.data.html);
-        setCss(res.data.css);
-        setJs(res.data.js);
-      });
+      })
+        .then((res) => {
+          setHtml(res.data.html);
+          setCss(res.data.css);
+          setJs(res.data.js);
+        })
+        .catch((e) => {
+          alert("code not found");
+          window.location.href = "/new";
+        });
     }
-  }, []);
+  }, [Id]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -56,25 +62,40 @@ function Body(props) {
   }
   return (
     <>
-      <div className="pane top-pane">
-        <Editor
-          language="xml"
-          displayName="HTML"
-          value={html}
-          onChange={setHtml}
-        />
-        <Editor
-          language="css"
-          displayName="CSS"
-          value={css}
-          onChange={setCss}
-        />
-        <Editor
-          language="javascript"
-          displayName="JS"
-          value={js}
-          onChange={setJs}
-        />
+      <div className="flex">
+        <div className="codes">
+          <Codes
+            click={(id) => {
+              setId(id);
+            }}
+          />
+        </div>
+        <div className="pane top-pane">
+          {type === "html" ? (
+            <Editor
+              language="xml"
+              displayName="HTML"
+              value={html}
+              onChange={setHtml}
+            />
+          ) : null}
+          {type === "css" ? (
+            <Editor
+              language="css"
+              displayName="CSS"
+              value={css}
+              onChange={setCss}
+            />
+          ) : null}
+          {type === "js" ? (
+            <Editor
+              language="javascript"
+              displayName="JS"
+              value={js}
+              onChange={setJs}
+            />
+          ) : null}
+        </div>
       </div>
       <div className="pane">
         <iframe

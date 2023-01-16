@@ -4,6 +4,7 @@ import {
   Toolbar,
   Typography,
   Button,
+  Checkbox,
   TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -36,6 +37,7 @@ export default function Navbar(props) {
   const LOC = useLocation();
   const classes = useStyles();
   const [show, setshow] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
   const logout = () => {
     localStorage.setItem("TOKEN", "");
     localStorage.setItem("IsLogin", 0);
@@ -44,8 +46,8 @@ export default function Navbar(props) {
     authorization: `Toekn ` + localStorage.getItem("TOKEN"),
   };
   const save = () => {
-    console.log(LOC.pathname.slice(1, LOC.pathname.length));
-    if (LOC.pathname === "/new") {
+    var name = LOC.pathname.split("/")[1];
+    if (name === "new") {
       setshow(!show);
       return;
     }
@@ -53,11 +55,11 @@ export default function Navbar(props) {
       html: localStorage.getItem("codepen-clone-html"),
       css: localStorage.getItem("codepen-clone-css"),
       js: localStorage.getItem("codepen-clone-js"),
-      name: LOC.pathname.slice(1, LOC.pathname.length),
+      name: decodeURI(name),
     };
     axios({
       method: "PUT",
-      url: "https://limitless-castle-44403.herokuapp.com/code/update",
+      url: "http://localhost:5000/code/update",
       data: DATA,
       headers: HEADERS,
     })
@@ -74,11 +76,12 @@ export default function Navbar(props) {
       css: localStorage.getItem("codepen-clone-css"),
       js: localStorage.getItem("codepen-clone-js"),
       name: data.name,
+      public: isPublic,
     };
     console.log(DATA);
     axios({
       method: "POST",
-      url: "https://limitless-castle-44403.herokuapp.com/code/add",
+      url: "http://localhost:5000/code/add",
       data: DATA,
       headers: HEADERS,
     })
@@ -91,14 +94,20 @@ export default function Navbar(props) {
         setshow(!show);
       });
   };
+  const hide = (e) => {
+    console.log(e.target.className === "window ", e.target.className);
+    if (e.target.className === "window ") {
+      setshow(false);
+    }
+  };
   return (
     <>
-      <div className={`window ${show ? "" : "notShow"}`}>
+      <div className={`window ${show ? "" : "notShow"}`} onClick={hide}>
         <div className={`name`}>
           <h1>Name</h1>
           <form onSubmit={handleSubmit(Submit)}>
             <TextField
-              InputProps={{ classes: { input: "form" } }}
+              // InputProps={{ classes: { input: "form" } }}
               className="form"
               label="name"
               variant="standard"
@@ -109,8 +118,14 @@ export default function Navbar(props) {
             />
             <br />
             {errors.name?.type === "required" ? "name can't be empty" : null}
-            {errors.name?.type === "validate" ? "name can't be new" : null}
             <br />
+            {errors.name?.type === "validate" ? "name can't be new" : null}
+            Make code Public
+            <Checkbox
+              onChange={(e) => {
+                setIsPublic(e.target.checked);
+              }}
+            />
             <br />
             <Button type="submit" variant="contained" color="primary">
               Submit
@@ -135,16 +150,16 @@ export default function Navbar(props) {
               </>
             ) : (
               <>
-                {LOC.pathname !== "/my-codes" ? (
+                {LOC.pathname !== "/public-codes" ? (
                   <Button color="inherit" onClick={save}>
                     Save
                   </Button>
                 ) : null}
-                <Link to="/new" className="link">
+                <Link to="/new/html" className="link">
                   <Button color="inherit">New Code</Button>
                 </Link>
-                <Link to="/my-codes" className="link">
-                  <Button color="inherit">My Codes</Button>
+                <Link to="/public-codes" className="link">
+                  <Button color="inherit">Public Codes</Button>
                 </Link>
                 <Link to="/login" className="link ">
                   <Button color="inherit" onClick={logout}>

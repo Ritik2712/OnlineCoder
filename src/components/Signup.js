@@ -12,6 +12,7 @@ export default function Signup() {
     formState: { errors },
   } = useForm();
   const [islogin, setIslogin] = useState(false);
+  const [usernameExist, setUsernameExist] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("IsLogin") === "1") {
       setIslogin(true);
@@ -24,7 +25,7 @@ export default function Signup() {
   const Submit = (data) => {
     axios({
       method: "POST",
-      url: "https://limitless-castle-44403.herokuapp.com/users/add",
+      url: "http://localhost:5000/users/add",
       data,
     })
       .then((res) => {
@@ -35,10 +36,21 @@ export default function Signup() {
       })
       .catch((e) => {
         console.log(e);
+        if (e.response.status == "400") {
+          Exist();
+        }
       });
   };
+
+  const Exist = () => {
+    setUsernameExist(true);
+    setTimeout(() => {
+      setUsernameExist(false);
+    }, 4000);
+  };
   return (
-    <form onSubmit={handleSubmit(Submit)}>
+    <form onSubmit={handleSubmit(Submit)} className="form signUp">
+      <h1>Signup</h1>
       <TextField
         label="Username"
         variant="standard"
@@ -46,6 +58,7 @@ export default function Signup() {
       />
       <br />
       {errors.username && "Username required"}
+      {usernameExist && "Username Already Existed"}
       <br />
       <br />
       <TextField
@@ -55,7 +68,9 @@ export default function Signup() {
         {...register("password", { required: true, minLength: 8 })}
       />
       <br />
-      {errors.password && "Password is require"}
+      {errors?.password?.type === "required" && "Password is required"}
+      {errors?.password?.type === "minLength" &&
+        "Password must be 8 characters long"}
       <br />
       <br />
       <TextField
@@ -69,7 +84,10 @@ export default function Signup() {
         })}
       />
       <br />
-      {errors.confirmPassword && "Password doesn't match"}
+      {errors?.confirmPassword?.type === "required" && "Password is require"}
+      {errors?.confirmPassword?.type === "minLength" &&
+        "Password must be 8 characters long"}
+      <br />
       <br />
       <br />
       <Button type="submit" variant="contained" color="primary">

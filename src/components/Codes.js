@@ -12,6 +12,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { setContractDefaults } from "@oceanprotocol/lib";
 
 const useStyles = makeStyles({
   table: {
@@ -19,13 +20,15 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Codes() {
+export default function Codes(props) {
   const [codes, setcodes] = useState([]);
   const classes = useStyles();
   const [islogin, setIslogin] = useState(false);
   const HEADERS = {
     authorization: `Toekn ` + localStorage.getItem("TOKEN"),
   };
+  const [Navigate, setNavigate] = useState(false);
+  const [url, setUrl] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("IsLogin") === "0") {
       setIslogin(true);
@@ -33,7 +36,7 @@ export default function Codes() {
 
     axios({
       method: "GET",
-      url: "https://limitless-castle-44403.herokuapp.com/code",
+      url: "http://localhost:5000/code",
       headers: HEADERS,
     })
       .then((res) => {
@@ -43,6 +46,8 @@ export default function Codes() {
       .catch((e) => {
         console.log(e);
       });
+
+    return setNavigate(false);
   }, []);
   if (islogin) {
     return <Navigate to="/new" />;
@@ -50,7 +55,7 @@ export default function Codes() {
   const Del = (name) => {
     axios({
       method: "DELETE",
-      url: "https://limitless-castle-44403.herokuapp.com/code/delete",
+      url: "http://localhost:5000/code/delete",
       data: { name },
       headers: HEADERS,
     })
@@ -62,47 +67,56 @@ export default function Codes() {
         console.log(e);
       });
   };
+
+  const navigate = (event, url) => {
+    event.stopPropagation();
+    props.click(url);
+  };
+  if (Navigate) {
+    window.location.href = "/" + url;
+  }
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Project Name</TableCell>
-            <TableCell align="right">Edit/Delete</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {codes.length === 0 ? (
-            <h1>No Projects yet</h1>
-          ) : (
-            codes.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell component="th" scope="row">
+    <>
+      <h1>My codes</h1>
+      {codes.length ? (
+        <ul>
+          {codes.map((item, index) => {
+            return (
+              <li onClick={(e) => navigate(e, item.name)}>
+                <Link to={"/" + item.name + "/html"} className="link1">
                   {item.name}
-                </TableCell>
-                <TableCell align="right">
-                  <Link to={`/${item.name}`} className="link">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className="edit"
-                    >
-                      Edit
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="contained"
-                    onClick={() => Del(item.name)}
-                    color="secondary"
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                </Link>
+                <i
+                  class="fa fa-trash"
+                  onClick={() => {
+                    Del(item.name);
+                  }}
+                  aria-hidden="true"
+                ></i>
+                <ul>
+                  <li onClick={(e) => navigate(e, item.name)}>
+                    <Link to={"/" + item.name + "/html"} className="link1">
+                      HTML
+                    </Link>
+                  </li>
+                  <li onClick={(e) => navigate(e, item.name)}>
+                    <Link to={"/" + item.name + "/css"} className="link1">
+                      Css
+                    </Link>
+                  </li>
+                  <li onClick={(e) => navigate(e, item.name)}>
+                    <Link to={"/" + item.name + "/js"} className="link1">
+                      JS
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <h1>No projects</h1>
+      )}
+    </>
   );
 }
