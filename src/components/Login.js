@@ -20,7 +20,7 @@ export default function Login() {
     return () => setIslogin(false);
   }, []);
   if (islogin) {
-    return <Navigate to="/new" />;
+    return <Navigate to="/new/html" />;
   }
 
   const Submit = (data) => {

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Editor from "./Editor";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { Navigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 function PublicView(props) {
   const [html, setHtml] = useLocalStorage(

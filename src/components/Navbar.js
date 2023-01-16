@@ -56,6 +56,8 @@ export default function Navbar(props) {
       css: localStorage.getItem("codepen-clone-css"),
       js: localStorage.getItem("codepen-clone-js"),
       name: decodeURI(name),
+      modified: new Date(),
+      size: localStorage.getItem("codepen-clone-size"),
     };
     axios({
       method: "PUT",
@@ -77,6 +79,8 @@ export default function Navbar(props) {
       js: localStorage.getItem("codepen-clone-js"),
       name: data.name,
       public: isPublic,
+      created: new Date(),
+      size: localStorage.getItem("codepen-clone-size"),
     };
     console.log(DATA);
     axios({

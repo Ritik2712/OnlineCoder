@@ -1,28 +1,11 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-} from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { setContractDefaults } from "@oceanprotocol/lib";
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
+import moment from "moment";
 
 export default function Codes(props) {
   const [codes, setcodes] = useState([]);
-  const classes = useStyles();
   const [islogin, setIslogin] = useState(false);
   const HEADERS = {
     authorization: `Toekn ` + localStorage.getItem("TOKEN"),
@@ -50,7 +33,7 @@ export default function Codes(props) {
     return setNavigate(false);
   }, []);
   if (islogin) {
-    return <Navigate to="/new" />;
+    return <Navigate to="/new/html" />;
   }
   const Del = (name) => {
     axios({
@@ -82,7 +65,10 @@ export default function Codes(props) {
         <ul>
           {codes.map((item, index) => {
             return (
-              <li onClick={(e) => navigate(e, item.name)}>
+              <li
+                onClick={(e) => navigate(e, item.name)}
+                title={"updated " + moment(item.modified).fromNow()}
+              >
                 <Link to={"/" + item.name + "/html"} className="link1">
                   {item.name}
                 </Link>

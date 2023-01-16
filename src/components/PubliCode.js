@@ -13,6 +13,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
 
 const useStyles = makeStyles({
   table: {
@@ -68,7 +69,7 @@ export default function PubliCode() {
       })
       .catch((e) => {
         alert("code not found");
-        window.location.href = "/new";
+        window.location.href = "/new/html";
       });
   };
 
@@ -106,7 +107,11 @@ export default function PubliCode() {
         <TableHead>
           <TableRow>
             <TableCell>Project Name</TableCell>
-            <TableCell align="right">View/Fork</TableCell>
+            <TableCell>Created</TableCell>
+            <TableCell>Modified</TableCell>
+            <TableCell>Size</TableCell>
+            <TableCell>Creator</TableCell>
+            <TableCell align="right">View/Clone</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -118,6 +123,20 @@ export default function PubliCode() {
                 <TableCell component="th" scope="row">
                   {item.name}
                 </TableCell>
+                <TableCell component="th" scope="row">
+                  {moment(item.created).format("DD MMM YY")}
+                </TableCell>
+
+                <TableCell component="th" scope="row">
+                  {moment(item.modified).fromNow()}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {item.size} Bytes
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {item.creator}
+                </TableCell>
+
                 <TableCell align="right">
                   <Button
                     variant="contained"
@@ -134,7 +153,7 @@ export default function PubliCode() {
                     onClick={() => Del(item.name, item.html, item.css, item.js)}
                     color="primary"
                   >
-                    Fork
+                    Clone
                   </Button>
                 </TableCell>
               </TableRow>

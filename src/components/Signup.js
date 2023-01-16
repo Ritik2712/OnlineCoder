@@ -3,6 +3,7 @@ import { Button, TextField } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import {moment} from 'moment'
 
 export default function Signup() {
   const {
@@ -20,7 +21,7 @@ export default function Signup() {
     return () => setIslogin(false);
   }, []);
   if (islogin) {
-    return <Navigate to="/new" />;
+    return <Navigate to="/new/html" />;
   }
   const Submit = (data) => {
     axios({

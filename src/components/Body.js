@@ -9,6 +9,7 @@ function Body(props) {
   const [html, setHtml] = useLocalStorage("html", "");
   const [css, setCss] = useLocalStorage("css", "");
   const [js, setJs] = useLocalStorage("js", "");
+  const [size, setSize] = useLocalStorage("size", "");
   const [srcDoc, setSrcDoc] = useState("");
   const { id, type } = useParams();
   const [Id, setId] = useState(id);
@@ -39,26 +40,29 @@ function Body(props) {
         })
         .catch((e) => {
           alert("code not found");
-          window.location.href = "/new";
+          window.location.href = "/new/html";
         });
     }
   }, [Id]);
 
   useEffect(() => {
+    const template = `
+    <html>
+      <body>${html}</body>
+      <style>${css}</style>
+      <script>${js}</script>
+    </html>
+  `;
+    const byteSize = (str) => new Blob([str]).size;
     const timeout = setTimeout(() => {
-      setSrcDoc(`
-        <html>
-          <body>${html}</body>
-          <style>${css}</style>
-          <script>${js}</script>
-        </html>
-      `);
+      setSrcDoc(template);
+      setSize(byteSize(template));
     }, 1000);
 
     return () => clearTimeout(timeout);
   }, [html, css, js]);
   if (!isLogin) {
-    return <Navigate to="/new" />;
+    return <Navigate to="/new/html" />;
   }
   return (
     <>
